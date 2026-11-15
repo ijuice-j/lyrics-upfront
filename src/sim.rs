@@ -5,6 +5,10 @@
 //!   --simulate play | paused | idle | static | hidden
 //!   --simulate demo[:COVER]   a short demo song with original lyrics, for
 //!                             screenshots; COVER is an optional image file
+//!   --simulate demo:TRACK.json  any song, for screenshots: {"title", "artist",
+//!                             "album", "lrc": file, "cover": file,
+//!                             "start_ms", "duration_ms"} (paths relative to
+//!                             the JSON file)
 
 use std::sync::mpsc::Sender;
 use std::time::{Duration, Instant};
@@ -61,14 +65,78 @@ pub fn demo_lrc() -> (String, i64) {
 "), 200_000)
 }
 
+/// What the simulator plays.
+struct Track {
+    title: String,
+    artist: String,
+    album: String,
+    lrc: String,
+    duration_ms: i64,
+    /// Playhead at launch.
+    start_ms: i64,
+    /// Cover image bytes; one byte stands for the simulator's solid red cover.
+    cover: Vec<u8>,
+    source: &'static str,
+}
+
+impl Track {
+    fn synthetic() -> Self {
+        let (lrc, duration_ms) = synthetic_lrc();
+        Track {
+            title: "Synthetic Song".into(),
+            artist: "Profiler".into(),
+            album: "Bench".into(),
+            lrc,
+            duration_ms,
+            start_ms: 5000,
+            cover: vec![0],
+            source: "synthetic",
+        }
+    }
+
+    /// "demo", "demo:<cover image>" or "demo:<track.json>".
+    fn demo(arg: &str) -> Self {
+        let file = arg.strip_prefix(':').map(std::path::Path::new);
+        if let Some(track) = file.filter(|f| f.extension().map_or(false, |e| e == "json")).and_then(Self::from_json) {
+            return track;
+        }
+        let (lrc, duration_ms) = demo_lrc();
+        Track {
+            title: "Paper Satellites".into(),
+            artist: "Mira Holloway".into(),
+            album: "Demo".into(),
+            lrc,
+            duration_ms,
+            start_ms: 5000,
+            cover: file.and_then(|f| std::fs::read(f).ok()).unwrap_or_else(|| vec![0]),
+            source: "demo",
+        }
+    }
+
+    fn from_json(path: &std::path::Path) -> Option<Self> {
+        let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(path).ok()?).ok()?;
+        let dir = path.parent()?;
+        let text = |k: &str| v.get(k).and_then(|x| x.as_str()).unwrap_or_default().to_string();
+        let file = |k: &str| v.get(k).and_then(|x| x.as_str()).and_then(|f| std::fs::read(dir.join(f)).ok());
+        Some(Track {
+            title: text("title"),
+            artist: text("artist"),
+            album: text("album"),
+            lrc: String::from_utf8(file("lrc")?).ok()?,
+            duration_ms: v.get("duration_ms")?.as_i64()?,
+            start_ms: v.get("start_ms").and_then(|x| x.as_i64()).unwrap_or(5000),
+            cover: file("cover").unwrap_or_else(|| vec![0]),
+            source: "demo",
+        })
+    }
+}
+
 pub fn spawn<W: Wake>(scenario: String, tx: Sender<Event>, waker: W) {
     std::thread::spawn(move || {
-        // "demo" or "demo:<cover image>"
-        let demo_cover = scenario.strip_prefix("demo").map(|rest| rest.strip_prefix(':').and_then(|f| std::fs::read(f).ok()));
-        let demo = demo_cover.is_some();
-        let (lrc, duration_ms) = if demo { demo_lrc() } else { synthetic_lrc() };
-        // Without a file, a one-byte thumbnail stands for the simulator's solid red cover.
-        let cover = demo_cover.flatten().unwrap_or_else(|| vec![0]);
+        let track = match scenario.strip_prefix("demo") {
+            Some(arg) => Track::demo(arg),
+            None => Track::synthetic(),
+        };
         let started = Instant::now();
         let mut fwd = Forwarder::new(tx, waker);
         let mut polls = 0u32;
@@ -81,28 +149,26 @@ pub fn spawn<W: Wake>(scenario: String, tx: Sender<Event>, waker: W) {
                 _ => {
                     polls += 1;
                     let playing = scenario != "paused";
-                    let pos = if playing { started.elapsed().as_millis() as i64 + 5000 } else { 42_000 };
-                    let (title, artist, album) =
-                        if demo { ("Paper Satellites", "Mira Holloway", "Demo") } else { ("Synthetic Song", "Profiler", "Bench") };
+                    let pos = if playing { started.elapsed().as_millis() as i64 + track.start_ms } else { 42_000 };
                     let p = Playback {
-                        title: title.into(),
-                        artist: artist.into(),
-                        album: album.into(),
-                        duration_ms,
+                        title: track.title.clone(),
+                        artist: track.artist.clone(),
+                        album: track.album.clone(),
+                        duration_ms: track.duration_ms,
                         playing,
-                        position_ms: pos % duration_ms,
+                        position_ms: pos % track.duration_ms,
                         captured: Instant::now(),
                         // Art arrives on the second poll, as with real SMTC.
-                        thumbnail: if polls == 2 { Some(cover.clone()) } else { None },
+                        thumbnail: if polls == 2 { Some(track.cover.clone()) } else { None },
                     };
                     let key = p.key();
                     fwd.push(Some(p));
                     if !sent_lyrics {
                         sent_lyrics = true;
                         let result = LyricsResult {
-                            lines: build_lines(&parse_lrc(&lrc)),
+                            lines: build_lines(&parse_lrc(&track.lrc)),
                             synced: true,
-                            source: if demo { "demo" } else { "synthetic" }.into(),
+                            source: track.source.into(),
                             ..Default::default()
                         };
                         fwd.send(Event::Lyrics { key, result });

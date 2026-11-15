@@ -20,7 +20,7 @@ A floating lyrics overlay for Spotify on Windows: transparent, always on top, an
 
 <br>
 
-<img src="docs/hero.png" width="860" alt="The Lyrics UpFront card floating over a desktop: the sung line is sharp and white, the lines around it blurred, with the song title, artist and a thin progress line at the top">
+<img src="docs/hero.png" width="860" alt="The Lyrics UpFront card playing The Line by Twenty One Pilots at 1:55: the sung line is sharp and white, the lines around it blurred, with the song title, artist, clock and a thin progress line at the top">
 
 </div>
 
@@ -38,7 +38,7 @@ When the song moves on, the whole stack rises, the next line pulls into focus an
 
 ## Colours from the cover
 
-<img src="docs/colours.png" width="100%" alt="Three cards side by side, tinted amber, teal and violet to match three different album covers">
+<img src="docs/colours.png" width="100%" alt="Three cards side by side, tinted red, olive and violet to match the covers of Stressed Out, Chlorine and Heathens by Twenty One Pilots">
 
 The card takes its colour from the album art of whatever is playing, then crossfades when the track changes. The cover only supplies the hue. The card stays dark and the lyrics stay white, so a bright or busy cover can never make the words hard to read.
 
@@ -178,6 +178,6 @@ Everything runs on your PC. The only network requests are lyric lookups to LRCLI
 
 MIT, see [LICENSE](LICENSE).
 
-Lyrics UpFront is not affiliated with, endorsed by or connected to Spotify AB. The song in the screenshots is a made-up demo with original lyrics.
+Lyrics UpFront is not affiliated with, endorsed by or connected to Spotify AB or any artist shown. The screenshots show songs by Twenty One Pilots, with lyrics from LRCLIB, as the app displays them; the line-change animation uses a made-up demo song. Song titles, lyrics and artwork belong to their owners.
 
 <sub>Keywords: spotify lyrics overlay · floating lyrics windows · picture in picture lyrics · always on top lyrics · synced lyrics desktop app · spotify mini player lyrics · karaoke lyrics overlay for pc · real-time lyrics windows 10 11</sub>

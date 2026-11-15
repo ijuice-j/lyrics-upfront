@@ -143,8 +143,9 @@ Lyric lookups allow 5 s to reach LRCLIB and 20 s for its answer (it can take
 after 3 s; after a second failure the card says it cannot reach the lyrics
 and retries every 15 s.
 
-`--simulate demo[:COVER]` plays a short demo song with original lyrics, for
-screenshots, and `LYRICS_UPFRONT_SNAPSHOT=<dir>` (with `--simulate`) saves
+`--simulate demo[:COVER]` plays a short demo song with original lyrics, and
+`--simulate demo:TRACK.json` plays any song from a file (`title`, `artist`,
+`album`, `lrc`, `cover`, `start_ms`, `duration_ms`), for screenshots, and `LYRICS_UPFRONT_SNAPSHOT=<dir>` (with `--simulate`) saves
 every drawn frame there as raw BGRA at twice the display scale; the README
 images are made that way, never from the screen.
 
