@@ -1,0 +1,85 @@
+# Builds the Windows distributables and publishes them as a GitHub Release.
+#
+# Run it from the Actions tab (Release -> Run workflow) with a tag such as
+# v2.0.0, or push a tag matching v*. GitHub's Windows runners come with Rust
+# installed.
+#
+# Assets:
+#   LyricsUpFront-portable.exe  the app itself: one file, nothing to install
+#   LyricsUpFront-win64.zip     the same exe in a zip, for those who prefer one
+#   LyricsUpFront-Setup.exe     installer with Start Menu shortcuts
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, e.g. v2.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Test
+        run: cargo test --release --locked
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $exe = "target/release/lyrics-upfront.exe"
+          Copy-Item $exe LyricsUpFront-portable.exe
+          New-Item -ItemType Directory -Force zip | Out-Null
+          Copy-Item $exe zip/LyricsUpFront.exe
+          Compress-Archive -Path zip/LyricsUpFront.exe -DestinationPath LyricsUpFront-win64.zip
+          # The installer's own icon, drawn by the app from the same art as its exe icon.
+          Start-Process -Wait -FilePath $exe -ArgumentList '--write-icon', 'app.ico'
+          if (-not (Test-Path app.ico)) { throw "app.ico was not written" }
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress }
+          & $iscc installer.iss
+          if ($LASTEXITCODE -ne 0) { throw "ISCC failed" }
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          target_commitish: ${{ github.sha }}
+          name: Lyrics UpFront ${{ env.TAG }}
+          files: |
+            LyricsUpFront-portable.exe
+            LyricsUpFront-win64.zip
+            installer_output/LyricsUpFront-Setup.exe
+          body: |
+            ## Downloads
+
+            - **LyricsUpFront-Setup.exe** — installer with Desktop and Start Menu shortcuts. It replaces Spotify Lyrics Overlay if you have it installed.
+            - **LyricsUpFront-portable.exe** — one file of about 1 MB, no install. Double-click it and play something in Spotify.
+            - **LyricsUpFront-win64.zip** — the same exe in a zip.
+
+            Windows SmartScreen will warn about an unrecognised app because the build is not code-signed. Click **More info → Run anyway**.
+
+            ## What's new
+
+            - **Spotify Lyrics Overlay is now Lyrics UpFront.** Your position, settings, cached lyrics and start-with-Windows choice carry over on first run.
+            - Rebuilt as a native Windows app: about 1 MB instead of 144–218 MB, around 1% of one CPU core while playing instead of about 70%, and roughly a quarter of the memory.
+            - One design: **Focus**, with the sung line lighting up whole as it starts (the lyrics service times whole lines, so it is never early or late).
+            - Progress is a thin line under the title, with elapsed and total time.
+            - Not in this version: the Tape design and the optional Spotify connection for preloading queued lyrics.

@@ -1,0 +1,4 @@
+/target/
+/installer_output/
+# Written by the installer build (lyrics-upfront.exe --write-icon app.ico)
+/app.ico
