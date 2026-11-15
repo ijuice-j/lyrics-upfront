@@ -1,4 +1,4 @@
-//! Card theme from album art -- a port of Spotify Lyrics Overlay's app/palette.py.
+//! Card theme from album art -- a port of the earlier version's app/palette.py.
 //!
 //! The cover only supplies a hue: the plate is forced near-black and the accent
 //! bright, so no cover can make the lyrics hard to read. Swatches are scored by

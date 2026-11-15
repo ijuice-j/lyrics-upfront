@@ -1,7 +1,7 @@
 //! The Focus card: state, drawing, and frame scheduling.
 //!
 //! The Focus design with whole-line highlighting (Spotify style), matching
-//! Spotify Lyrics Overlay's web/style.css card: a tinted rounded card, header (cover, title,
+//! the earlier version's web/style.css card: a tinted rounded card, header (cover, title,
 //! artist, clock, close), five lyric slots with the neighbours blurred and
 //! faded by distance, the sung line lit whole, a 720ms "rack focus" roll on
 //! line change (stack rises, arriving line pulls into focus, departing line

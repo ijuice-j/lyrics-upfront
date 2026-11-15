@@ -8,7 +8,7 @@ use windows::Win32::System::Registry::*;
 
 const RUN_KEY: PCWSTR = w!("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
 const VALUE: PCWSTR = w!("LyricsUpFront");
-/// The value Spotify Lyrics Overlay, the app this one replaces, used.
+/// The value the earlier version used.
 const LEGACY_VALUE: PCWSTR = w!("LyricOverlay");
 
 fn exists(value: PCWSTR) -> bool {

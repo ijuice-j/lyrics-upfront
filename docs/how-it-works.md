@@ -1,8 +1,7 @@
 # How Lyrics UpFront works
 
-Lyrics UpFront is the native rebuild of
-[Spotify Lyrics Overlay](https://github.com/ijuice-j/spotify-lyrics-overlay), a Python, Qt and Chromium app, without any
-of the three. It reads the same media
+Lyrics UpFront is a native rebuild of an earlier Python, Qt and Chromium
+version, without any of the three. It reads the same media
 info and fetches from the same lyrics source. On first run it copies the old
 app's settings and lyrics cache from `~/.lyric-overlay` into its own folder,
 `~/.lyrics-upfront`, and moves the old start-with-Windows entry to itself.

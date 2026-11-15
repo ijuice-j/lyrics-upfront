@@ -6,8 +6,8 @@
 ; The app is one self-contained exe of about 1 MB,
 ; so the installer is tiny too.
 ;
-; Lyrics UpFront replaces Spotify Lyrics Overlay (the Python app). It keeps
-; that app's AppId, so running this setup on a machine that has it upgrades
+; Lyrics UpFront replaces its earlier Python version. It keeps that
+; version's AppId, so running this setup on a machine that has it upgrades
 ; it in place: the old exe, runtime folder, shortcuts and start-with-Windows
 ; entry are replaced by the new ones, and Settings > Apps lists one app.
 ;
@@ -26,13 +26,13 @@
 ; Registry value shared with the app's own "Start automatically" setting.
 #define RunValueName   "LyricsUpFront"
 
-; Names used by Spotify Lyrics Overlay, cleaned up on upgrade.
+; Names used by the earlier version, cleaned up on upgrade.
 #define OldAppName      "Spotify Lyrics Overlay"
 #define OldExeName      "SpotifyLyricsOverlay.exe"
 #define OldRunValueName "LyricOverlay"
 
 [Setup]
-; Stable GUID, inherited from Spotify Lyrics Overlay. Never change it -- it is
+; Stable GUID, inherited from the earlier version. Never change it -- it is
 ; how Windows recognises an existing install and upgrades it in place rather
 ; than stacking a second copy.
 AppId={{8F3C2A41-6D9E-4B27-9C55-1E7A0D4B8F62}
@@ -83,7 +83,7 @@ Name: "desktopicon"; Description: "Create a &Desktop shortcut"; GroupDescription
 Name: "startupicon"; Description: "Start {#AppName} when I sign in to Windows"; GroupDescription: "Startup:"; Flags: unchecked
 
 [InstallDelete]
-; Upgrading from Spotify Lyrics Overlay: remove its ~200 MB runtime folder
+; Upgrading from the earlier version: remove its ~200 MB runtime folder
 ; and its exe, which the new exe replaces.
 Type: filesandordirs; Name: "{app}\_internal"
 Type: files; Name: "{app}\{#OldExeName}"
@@ -116,7 +116,7 @@ Filename: "{app}\{#AppExeName}"; Description: "Launch {#AppName}"; Flags: nowait
 
 ; The user's own settings live in %USERPROFILE%\.lyrics-upfront and are
 ; deliberately left alone on uninstall, so reinstalling keeps their position
-; and preferences. On its first run the app copies Spotify Lyrics Overlay's
+; and preferences. On its first run the app copies the earlier version's
 ; settings and cached lyrics from %USERPROFILE%\.lyric-overlay.
 
 [Code]
@@ -139,7 +139,7 @@ begin
   Result := True;
   if IsRunning('{#AppExeName}') or IsRunning('{#OldExeName}') then
   begin
-    if MsgBox('{#AppName} (or {#OldAppName}) is currently running.' + #13#10#13#10 +
+    if MsgBox('{#AppName} (or its earlier version) is currently running.' + #13#10#13#10 +
               'Quit it from the tray icon, then click OK to continue.',
               mbConfirmation, MB_OKCANCEL) = IDOK then
     begin

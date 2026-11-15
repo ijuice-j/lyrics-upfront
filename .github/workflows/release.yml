@@ -70,7 +70,7 @@ jobs:
           body: |
             ## Downloads
 
-            - **LyricsUpFront-Setup.exe** — installer with Desktop and Start Menu shortcuts. It replaces Spotify Lyrics Overlay if you have it installed.
+            - **LyricsUpFront-Setup.exe** — installer with Desktop and Start Menu shortcuts. It replaces the earlier version if you have it installed.
             - **LyricsUpFront-portable.exe** — one file of about 1 MB, no install. Double-click it and play something in Spotify.
             - **LyricsUpFront-win64.zip** — the same exe in a zip.
 
@@ -78,7 +78,6 @@ jobs:
 
             ## What's new
 
-            - **Spotify Lyrics Overlay is now Lyrics UpFront.** Your position, settings, cached lyrics and start-with-Windows choice carry over on first run.
             - Rebuilt as a native Windows app: about 1 MB instead of 144–218 MB, around 1% of one CPU core while playing instead of about 70%, and roughly a quarter of the memory.
             - One design: **Focus**, with the sung line lighting up whole as it starts (the lyrics service times whole lines, so it is never early or late).
             - Progress is a thin line under the title, with elapsed and total time.

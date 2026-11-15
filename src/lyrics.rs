@@ -1,6 +1,6 @@
 //! Lyrics: LRCLIB lookup, LRC parsing, derived word timing and the disk cache.
 //!
-//! A line-for-line port of Spotify Lyrics Overlay's app/lyrics.py, including its fixes (instrumental
+//! A line-for-line port of the earlier version's app/lyrics.py, including its fixes (instrumental
 //! flag kept through the cache, transient failures never cached, misses expire,
 //! one-digit LRC fractions, artist-normalised cache keys). The cache keeps the
 //! Python app's file names and JSON layout, so the lyrics it had already

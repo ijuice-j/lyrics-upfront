@@ -69,7 +69,7 @@ fn main() {
         &args[1..]
     );
     if first_run {
-        log!("first run: imported {imported} file(s) from Spotify Lyrics Overlay's folder");
+        log!("first run: imported {imported} file(s) from the earlier version's folder");
         if simulate.is_none() && startup::adopt_legacy() {
             log!("first run: moved the old app's start-with-Windows entry to this app");
         }

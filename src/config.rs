@@ -1,6 +1,5 @@
-//! Settings in ~/.lyrics-upfront/config.json. The keys are the ones Spotify
-//! Lyrics Overlay (the Python app this replaces) used, so its file can be
-//! imported as is. Saving rewrites only the keys this app owns, so any other
+//! Settings in ~/.lyrics-upfront/config.json. The keys are the ones the
+//! earlier Python version used, so its file can be imported as is. Saving rewrites only the keys this app owns, so any other
 //! keys in the file survive.
 
 use std::path::{Path, PathBuf};
@@ -15,7 +14,7 @@ pub fn config_dir() -> PathBuf {
     home_dir().join(".lyrics-upfront")
 }
 
-/// Where Spotify Lyrics Overlay kept its settings and lyrics cache.
+/// Where the earlier version kept its settings and lyrics cache.
 fn legacy_dir() -> PathBuf {
     home_dir().join(".lyric-overlay")
 }
@@ -25,7 +24,7 @@ pub fn first_run() -> bool {
     !config_dir().exists()
 }
 
-/// On first run, copy Spotify Lyrics Overlay's settings and downloaded lyrics
+/// On first run, copy the earlier version's settings and downloaded lyrics
 /// into this app's folder, so position, preferences and cached lyrics carry
 /// over. The old folder is left untouched. Returns how many files were copied.
 pub fn import_legacy() -> usize {

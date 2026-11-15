@@ -30,7 +30,7 @@ Play a song in Spotify and its lyrics appear in a small glass card on your deskt
 
 ## Every line, right on time
 
-<p align="center"><img src="docs/roll.gif" width="672" alt="Animation: the next lyric line rises into focus as the previous one softens and fades"></p>
+<p align="center"><img src="docs/roll.gif" width="672" alt="Animation from The Line by Twenty One Pilots: the next lyric line rises into focus as the previous one softens and fades"></p>
 
 Lyrics come with a timestamp for every line. Lyrics UpFront lights each line up exactly when its timestamp arrives, so it is never early or late.
 
@@ -57,7 +57,7 @@ The card takes its colour from the album art of whatever is playing, then crossf
 
 Lyrics UpFront is a native Windows app. Drawing, text, images and networking all come from Windows itself, so nothing heavy is bundled, and it only redraws when something on screen actually changes.
 
-| | Lyrics UpFront | Spotify Lyrics Overlay (before) |
+| | Lyrics UpFront | Earlier version (Python) |
 |---|---|---|
 | Download | **about 1 MB** | 144–218 MB |
 | CPU while a song plays | **under 1% of one core** | about 70% |
@@ -77,7 +77,7 @@ Prefer not to install? **[LyricsUpFront-portable.exe](https://github.com/ijuice-
 > [!NOTE]
 > Windows SmartScreen may warn about an unrecognised app, because the app is not code-signed (a certificate is an ongoing paid expense). Click **More info → Run anyway**. Every line of the source is here if you'd rather [build it yourself](#build-from-source).
 
-**Coming from Spotify Lyrics Overlay?** The installer replaces it. Your card position, settings, cached lyrics and start-with-Windows choice all carry over.
+**Upgrading from the earlier version?** The installer replaces it. Your card position, settings, cached lyrics and start-with-Windows choice all carry over.
 
 ## Settings
 
@@ -178,6 +178,6 @@ Everything runs on your PC. The only network requests are lyric lookups to LRCLI
 
 MIT, see [LICENSE](LICENSE).
 
-Lyrics UpFront is not affiliated with, endorsed by or connected to Spotify AB or any artist shown. The screenshots show songs by Twenty One Pilots, with lyrics from LRCLIB, as the app displays them; the line-change animation uses a made-up demo song. Song titles, lyrics and artwork belong to their owners.
+Lyrics UpFront is not affiliated with, endorsed by or connected to Spotify AB or any artist shown. The screenshots show songs by Twenty One Pilots, with lyrics from LRCLIB, as the app displays them. Song titles, lyrics and artwork belong to their owners.
 
 <sub>Keywords: spotify lyrics overlay · floating lyrics windows · picture in picture lyrics · always on top lyrics · synced lyrics desktop app · spotify mini player lyrics · karaoke lyrics overlay for pc · real-time lyrics windows 10 11</sub>
